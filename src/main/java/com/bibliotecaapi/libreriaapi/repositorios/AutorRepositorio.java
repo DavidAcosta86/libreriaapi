@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bibliotecaapi.libreriaapi.entidades.Autor;
 
+@Repository
 public interface AutorRepositorio extends JpaRepository<Autor, UUID> {
 
 }

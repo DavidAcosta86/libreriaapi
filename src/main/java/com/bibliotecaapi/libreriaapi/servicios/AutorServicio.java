@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -90,5 +91,18 @@ public class AutorServicio {
             throw new MiException("El nombre no puede ser nulo o estar vacío");
         }
     }
+
+    // @Transactional
+    // public void modificarAutor(String nombre, UUID id) {
+    // UUID idUuid = id.
+    // Optional<Autor> respuesta = autorRepositorio.findById(id);
+    // if (respuesta.isPresent()) {
+    // Autor autor = respuesta.get();
+    // System.out.println(autor);
+    // autor.setNombre(nombre);
+    // autorRepositorio.save(autor);
+    // }else {
+    // throw new NoSuchElementException("No se encontró el autor con ID: " + id);
+    // }}
 
 }

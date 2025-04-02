@@ -48,6 +48,24 @@ public class EditorialServicio {
         return editoriales;
     }
 
+    @Transactional(readOnly = true)
+    public List<Editorial> listarEditorialesActivas() {
+
+        List<Editorial> editoriales = new ArrayList<>();
+
+        editoriales = editorialRepositorio.findAllActiveEditorials();
+        return editoriales;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Editorial> listarEditorialesInActivas() {
+
+        List<Editorial> editoriales = new ArrayList<>();
+
+        editoriales = editorialRepositorio.findAllInactiveEditorials();
+        return editoriales;
+    }
+
     @Transactional
     public void modificarEditorial(UUID id, String nombre) throws MiException {
         validar(nombre);

@@ -40,4 +40,18 @@ public class EditorialControlador {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("listar_activas")
+    public ResponseEntity<Object> listarEditorialActivas() {
+        List<Editorial> response = editorialServicio.listarEditorialesActivas();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("listar_inactivas")
+    public ResponseEntity<Object> listarEditorialInActivas() {
+        List<Editorial> response = editorialServicio.listarEditorialesInActivas();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

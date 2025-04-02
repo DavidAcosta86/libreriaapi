@@ -16,4 +16,9 @@ public interface EditorialRepositorio extends JpaRepository<Editorial, UUID> {
     @Query("SELECT e FROM Editorial e ORDER BY e.nombre ASC")
     List<Editorial> findAllOrderedByName();
 
+    @Query("SELECT e FROM Editorial e WHERE e.activa = TRUE ")
+    List<Editorial> findAllActiveEditorials();
+
+    @Query("SELECT e FROM Editorial e WHERE e.activa = FALSE ")
+    List<Editorial> findAllInactiveEditorials();
 }
