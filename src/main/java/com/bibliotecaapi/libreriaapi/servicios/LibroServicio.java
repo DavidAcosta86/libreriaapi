@@ -8,6 +8,8 @@ import com.bibliotecaapi.libreriaapi.entidades.Autor;
 import com.bibliotecaapi.libreriaapi.entidades.Editorial;
 import com.bibliotecaapi.libreriaapi.entidades.Libro;
 import com.bibliotecaapi.libreriaapi.excepciones.MiException;
+import com.bibliotecaapi.libreriaapi.modelos.LibroCreateDTO;
+import com.bibliotecaapi.libreriaapi.modelos.LibroCreatedDTO;
 import com.bibliotecaapi.libreriaapi.repositorios.AutorRepositorio;
 import com.bibliotecaapi.libreriaapi.repositorios.EditorialRepositorio;
 import com.bibliotecaapi.libreriaapi.repositorios.LibroRepositorio;
@@ -28,31 +30,31 @@ public class LibroServicio {
     @Autowired
     private EditorialRepositorio editorialRepositorio;
 
+    @Autowired
+    private AutorServicio autorServicio;
+
+    @Autowired
+    private EditorialServicio editorialServicio;
+
     @Transactional
-    public void crearLibro(Long isbn, String titulo, Integer ejemplares, UUID idAutor, UUID idEditorial)
-            throws MiException {
+    public LibroCreatedDTO crearLibro(LibroCreateDTO libroCreateDTO) {
 
-        validar(isbn, titulo, ejemplares, idAutor, idEditorial);
+        Editorial editorial = editorialServicio.getOne(UUID.fromString(libroCreateDTO.getIdEditorial()));
+        Autor autor = autorServicio.getOne(UUID.fromString(libroCreateDTO.getIdAutor()));
+        Libro libroNvo = Libro.builder()
+                .titulo(libroCreateDTO.getTitulo())
+                .ejemplares(libroCreateDTO.getEjemplares())
+                .isbn(libroCreateDTO.getIsbn())
+                .activo(true)
+                .editorial(editorial)
+                .autor(autor)
+                .build();
 
-        Autor autor = autorRepositorio.findById(idAutor).get();
-        Editorial editorial = editorialRepositorio.findById(idEditorial).get();
+        libroNvo = libroRepositorio.save(libroNvo);
+        LibroCreatedDTO libroreg = new LibroCreatedDTO(libroNvo.getIsbn(), libroNvo.getTitulo(), autor.getNombre(),
+                editorial.getNombre());
+        return libroreg;
 
-        if (autor == null) {
-            throw new MiException("El autor especificado no existe.");
-        }
-
-        if (editorial == null) {
-            throw new MiException("La editorial especificada no existe.");
-        }
-
-        Libro libro = new Libro();
-        libro.setIsbn(isbn);
-        libro.setTitulo(titulo);
-        libro.setEjemplares(ejemplares);
-        libro.setAutor(autor);
-        libro.setEditorial(editorial);
-
-        libroRepositorio.save(libro);
     }
 
     @Transactional(readOnly = true)
