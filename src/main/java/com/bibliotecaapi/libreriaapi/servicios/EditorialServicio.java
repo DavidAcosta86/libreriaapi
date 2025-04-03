@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bibliotecaapi.libreriaapi.entidades.Editorial;
 import com.bibliotecaapi.libreriaapi.excepciones.MiException;
+import com.bibliotecaapi.libreriaapi.modelos.EditorialCreateDTO;
 import com.bibliotecaapi.libreriaapi.repositorios.EditorialRepositorio;
 
 import java.util.ArrayList;
@@ -28,6 +29,15 @@ public class EditorialServicio {
         editorial.setActiva(true);
 
         editorialRepositorio.save(editorial);
+    }
+
+    @Transactional // crear con DTOS
+    public EditorialCreateDTO crearEditorial(EditorialCreateDTO editorialDTO) {
+        Editorial editorial = new Editorial();
+        editorial.setNombre(editorialDTO.getNombre());
+
+        Editorial editorialGuardada = editorialRepositorio.save(editorial);
+        return new EditorialCreateDTO(editorialGuardada.getNombre());
     }
 
     @Transactional(readOnly = true)

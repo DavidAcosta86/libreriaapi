@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bibliotecaapi.libreriaapi.entidades.Autor;
 import com.bibliotecaapi.libreriaapi.excepciones.MiException;
+import com.bibliotecaapi.libreriaapi.modelos.AutorModificarEstadoDTO;
 import com.bibliotecaapi.libreriaapi.repositorios.AutorRepositorio;
 
 import lombok.RequiredArgsConstructor;
@@ -78,6 +79,29 @@ public class AutorServicio {
 
         } else {
             throw new MiException("No se encontró un autor con el ID especificado para eliminar");
+        }
+    }
+
+    @Transactional
+    public AutorModificarEstadoDTO modificarAutor(AutorModificarEstadoDTO autorDTO) {
+        Optional<Autor> autorOptional = autorRepositorio.findById(autorDTO.getId());
+
+        if (autorOptional.isPresent()) {
+            Autor autor = autorOptional.get();
+
+            // Solo modificamos los valores que el usuario haya enviado en el DTO
+            if (autorDTO.getNombre() != null) {
+                autor.setNombre(autorDTO.getNombre());
+            }
+            if (autorDTO.getActivo() != null) {
+                autor.setActivo(autorDTO.getActivo());
+            }
+
+            Autor autorGuardado = autorRepositorio.save(autor);
+            return new AutorModificarEstadoDTO(autorGuardado.getId(), autorGuardado.getNombre(),
+                    autorGuardado.isActivo());
+        } else {
+            throw new RuntimeException("Autor no encontrado con ID: " + autorDTO.getId());
         }
     }
 

@@ -10,6 +10,7 @@ import com.bibliotecaapi.libreriaapi.entidades.Libro;
 import com.bibliotecaapi.libreriaapi.excepciones.MiException;
 import com.bibliotecaapi.libreriaapi.modelos.LibroCreateDTO;
 import com.bibliotecaapi.libreriaapi.modelos.LibroCreatedDTO;
+import com.bibliotecaapi.libreriaapi.modelos.ListarLibroActivoDTO;
 import com.bibliotecaapi.libreriaapi.repositorios.AutorRepositorio;
 import com.bibliotecaapi.libreriaapi.repositorios.EditorialRepositorio;
 import com.bibliotecaapi.libreriaapi.repositorios.LibroRepositorio;
@@ -100,6 +101,13 @@ public class LibroServicio {
     @Transactional(readOnly = true)
     public Libro getOne(Long isbn) {
         return libroRepositorio.findById(isbn).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListarLibroActivoDTO> listarLibroActivo() {
+        List<ListarLibroActivoDTO> librosActivos = new ArrayList<>();
+        librosActivos = libroRepositorio.encontrarActivos();
+        return librosActivos;
     }
 
     private void validar(Long isbn, String titulo, Integer ejemplares, UUID idAutor, UUID idEditorial)
